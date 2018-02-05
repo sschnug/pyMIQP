@@ -17,7 +17,8 @@ class MIQP
 
     RowArray sol_x;
     double sol_obj;
-    int sol_status;
+    int sol_status = -1;
+    long sol_time = -1;
 
 public:
     // QP Problem API
@@ -36,6 +37,7 @@ public:
     RowArray get_sol_x();
     double get_sol_obj();
     int get_sol_status();
+    long get_sol_time();
 };
 
 #endif

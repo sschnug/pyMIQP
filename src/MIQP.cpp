@@ -15,8 +15,14 @@
 #include "BonEcpCuts.hpp"
 #include "BonOaNlpOptim.hpp"
 
+#include <chrono>
+
 using namespace Ipopt;
 using namespace Bonmin;
+using namespace std::chrono;
+
+typedef std::chrono::high_resolution_clock Time;
+typedef std::chrono::milliseconds ms;
 
 // QP Problem API
 
@@ -78,7 +84,14 @@ void MIQP::solve_bb()
     //Set up done, now let's branch and bound
     try {
       Bab bb;
+
+      auto t0 = Time::now();
+
       bb(bonmin);//process parameter file using Ipopt and do branch and bound using Cbc
+
+      auto t1 = Time::now();
+      ms d = std::chrono::duration_cast<ms>(t1 - t0);
+      this->sol_time  = d.count();
       this->sol_x = tminlp->get_sol_x();
       this->sol_obj = tminlp->get_sol_obj();
       this->sol_status = tminlp->get_sol_status();
@@ -112,4 +125,9 @@ double MIQP::get_sol_obj()
 int MIQP::get_sol_status()
 {
     return this->sol_status;
+}
+
+long MIQP::get_sol_time()
+{
+    return this->sol_time;
 }

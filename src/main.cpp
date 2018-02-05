@@ -24,5 +24,6 @@ PYBIND11_MODULE(pyMIQP, m)
   .def("get_sol_x", &MIQP::get_sol_x, "get_sol_x")
   .def("get_sol_obj", &MIQP::get_sol_obj, "get_sol_obj")
   .def("get_sol_status", &MIQP::get_sol_status, "get_sol_status")
+  .def("get_sol_time", &MIQP::get_sol_time, "get_sol_time")
   ;
 }
