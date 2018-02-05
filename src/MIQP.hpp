@@ -33,7 +33,7 @@ public:
     void set_initial_point(std::vector<double>& initial_point);
 
     // SOLVER API
-    void solve_bb();
+    void solve(std::string algorithm);
     RowArray get_sol_x();
     double get_sol_obj();
     int get_sol_status();

@@ -33,7 +33,8 @@ miqp.set_Q(Q)
 miqp.set_xlb(xlb)
 miqp.set_xub(xub)
 miqp.set_var_types(var_types)
-miqp.solve_bb()
+miqp.solve(algorithm="B-Hyb")              # redundant: algorithm-default: B-Hyb
+# miqp.solve(algorithm="BB")
 
 print('sol-status: ', miqp.get_sol_status())
 print('sol-obj: ', miqp.get_sol_obj())

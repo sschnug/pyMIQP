@@ -30,8 +30,8 @@ miqp.set_gub(gub)
 miqp.set_xlb(xlb)
 miqp.set_xub(xub)
 miqp.set_var_types(var_types)
-miqp.set_initial_point(np.array([0, 0]))  # redundant
-miqp.solve_bb()
+miqp.set_initial_point(np.array([0, 0]))  # redundant: initial-default: zero-vec
+miqp.solve(algorithm="B-Hyb")             # redundant: algorithm-default: B-Hyb
 
 print('sol-status: ', miqp.get_sol_status())
 print('sol-obj: ', miqp.get_sol_obj())

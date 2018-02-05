@@ -71,7 +71,7 @@ void MIQP::set_initial_point(std::vector<double>& initial_point)
     this->problemqp.set_initial_point(initial_point);
 }
 
-void MIQP::solve_bb()
+void MIQP::solve(std::string algorithm)
 {
     SmartPtr<MyTMINLP> tminlp = new MyTMINLP;
     tminlp->add_problem(this->problemqp);
@@ -79,6 +79,7 @@ void MIQP::solve_bb()
     BonminSetup bonmin;
     bonmin.initializeOptionsAndJournalist();
     bonmin.options()->SetStringValue("hessian_approximation", "limited-memory");
+    bonmin.options()->SetStringValue("algorithm", algorithm);
     bonmin.initialize(GetRawPtr(tminlp));
 
     //Set up done, now let's branch and bound
