@@ -95,7 +95,7 @@ See *tests* folder. E.g. ```test_0.py```:
     miqp.set_xub(xub)
     miqp.set_var_types(var_types)
     miqp.set_initial_point(np.array([0, 0]))                       # redundant
-    miqp.solve_bb()
+    miqp.solve()
 
     print('sol-status: ', miqp.get_sol_status())
     print('sol-obj: ', miqp.get_sol_obj())
@@ -136,7 +136,7 @@ Make sure to respect all those licenses (a lot of software involved).
 # ToDo
 - [ ] C++ style-formatting: very ugly mixed-style code for now
 - [ ] C++ code quality improvements: partially non-nice C++ Code
-- [ ] Support Bonmin's options (algorithms and co.)
+- [ ] Support more of Bonmin's options
 - [ ] Support options to control verbosity
 - [ ] Error-handling
 - [ ] (maybe) consider supporting MIQCQP (quadratic constraints) or MISOCP (second-order cone constraints)
