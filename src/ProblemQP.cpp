@@ -27,7 +27,42 @@ void ProblemQP::calc_jac_g()
     }
 }
 
+void ProblemQP::calc_h()
+{
+  unsigned int n = this->Q.rows();
+
+  unsigned int counter = 0;
+  for (int k=0; k<this->Q.outerSize(); ++k)
+    for (Eigen::SparseMatrix<double>::InnerIterator it(this->Q,k); it; ++it)
+    {
+      unsigned int row = it.row();
+      unsigned int col = it.col();
+
+      // upper triangular part oly
+      if (row <= col)
+      {
+        double val = it.value();
+
+        // sparsity-structure
+        this->H_nnz_I.push_back(row);
+        this->H_nnz_J.push_back(col);
+
+        // values
+        unsigned int flat_index = counter;
+
+        this->H_nnz_flat.push_back(flat_index);
+        this->H_nnz_V.push_back(val);
+        counter++;
+      }
+  }
+}
+
 // Setters
+
+void ProblemQP::set_hessian_approximation(bool state)
+{
+    this->hessian_approximation = state;
+}
 
 void ProblemQP::set_c(RowArray& c)
 {
@@ -37,6 +72,11 @@ void ProblemQP::set_c(RowArray& c)
 void ProblemQP::set_Q(SpMat& Q)
 {
     this->Q = Q;
+
+    if (!this->hessian_approximation)
+    {
+      this->calc_h();
+    }
 }
 
 void ProblemQP::set_A(SpMat& A)
@@ -96,6 +136,26 @@ std::vector<unsigned int>& ProblemQP::get_nnz_flat()
 std::vector<double>& ProblemQP::get_nnz_V()
 {
     return this->nnz_V;
+}
+
+std::vector<unsigned int>& ProblemQP::get_H_nnz_I()
+{
+    return this->H_nnz_I;
+}
+
+std::vector<unsigned int>& ProblemQP::get_H_nnz_J()
+{
+    return this->H_nnz_J;
+}
+
+std::vector<unsigned int>& ProblemQP::get_H_nnz_flat()
+{
+    return this->H_nnz_flat;
+}
+
+std::vector<double>& ProblemQP::get_H_nnz_V()
+{
+    return this->H_nnz_V;
 }
 
 int ProblemQP::get_n()

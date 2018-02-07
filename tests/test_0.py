@@ -21,7 +21,7 @@ xub = np.array([np.inf, np.inf])
 # 0, 1, 2 = cont, bin, int
 var_types = np.array([2, 0])
 
-miqp = MIQP()
+miqp = MIQP(hessian_approximation=False) # redundant: default -> exact-hessian
 miqp.set_c(c)
 miqp.set_Q(Q)
 miqp.set_A(A)
@@ -30,8 +30,8 @@ miqp.set_gub(gub)
 miqp.set_xlb(xlb)
 miqp.set_xub(xub)
 miqp.set_var_types(var_types)
-miqp.set_initial_point(np.array([0, 0]))  # redundant: initial-default: zero-vec
-miqp.solve(algorithm="B-Hyb")             # redundant: algorithm-default: B-Hyb
+miqp.set_initial_point(np.array([0, 0])) # redundant: default init-vec -> zeros
+miqp.solve(algorithm="B-Hyb")            # redundant: default algorithm -> B-Hyb
 
 print('sol-status: ', miqp.get_sol_status())
 print('sol-obj: ', miqp.get_sol_obj())

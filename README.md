@@ -1,9 +1,8 @@
 # pyMIQP
-This is a **Mixed Integer Quadratic Programming** solver for python.
+This is a **Mixed Integer Quadratic Programming** solver for python exploiting sparsity.
 
-Internally it uses [CoinOR](https://www.coin-or.org/)'s general MINLP-solver [bonmin](https://www.coin-or.org/Bonmin/) (which uses other CoinOR projects like [Cbc](https://projects.coin-or.org/Cbc) and [Ipopt](https://projects.coin-or.org/Ipopt))
-and prepares the necessary internals tuned for instances of Quadratic Programming (automatic calculation
-of NLP-like specification-components like gradients/jacobians).
+Internally it uses [CoinOR](https://www.coin-or.org/)'s general MINLP-solver [Bonmin](https://www.coin-or.org/Bonmin/) (which uses other CoinOR projects like [Cbc](https://projects.coin-or.org/Cbc) and [Ipopt](https://projects.coin-or.org/Ipopt))
+and prepares the necessary internals tuned for instances of Quadratic Programming like structure- and function-definitions including Jacobian / Hessian of the Lagrangian information).
 
 In general, Bonmin tackles MINLP (Mixed Integer NonLinear Programming) problems
 which is more general than MIQP (Mixed Integer Quadratic Programming) problems,
@@ -17,7 +16,7 @@ a local-optimum for nonconvex problems.
 # Status
 *Prototype*
 
-It's working for small constrained examples and bigger sparse (unconstrained) integer-least squares problems.
+It's working for small constrained examples.
 But heavy-testing has not been done yet and it's to be expected, that there are bugs.
 
 I'm rediscovering C++ right now and the C++-part in this project is sub-optimal at least!
@@ -54,13 +53,6 @@ The setuptools-based install is based on [pybind/python_example](https://github.
 ### Python-side
 The implementation assumes the usage of *sparse-matrices* (for Q + A), provided by [scipy.sparse](https://docs.scipy.org/doc/scipy/reference/sparse.html) (see tests) and *numpy-arrays* (for vectors) provided by [numpy](http://www.numpy.org/).
 
-# (Some) Implementation details
-Currently [Ipopt's](https://projects.coin-or.org/Ipopt) [Hessian-approximation](https://www.coin-or.org/Ipopt/documentation/node31.html) feature is hardcoded!
-
-This is due to the fact, that the necessary Hessian-calculation is not implemented yet.
-In general, not using Hessian-approximation will result in faster and more robust performance,
-except for the case where the Hessian is dense!
-
 # Usage
 See *tests* folder. E.g. ```test_0.py```:
 
@@ -68,9 +60,11 @@ See *tests* folder. E.g. ```test_0.py```:
     import scipy.sparse as sp
     from pyMIQP import MIQP
 
-    # Example from OPTI:
-    # https://www.inverseproblem.co.nz/OPTI/index.php/Probs/MIQP
-    # Example 1: Small MIQP
+    """
+    Example from OPTI:
+        https://www.inverseproblem.co.nz/OPTI/index.php/Probs/MIQP
+        Example 1: Small MIQP
+    """
 
     Q = sp.csc_matrix(np.array([[1,-1],[-1,2]]))
     c = np.array([-2, -6])
@@ -85,7 +79,7 @@ See *tests* folder. E.g. ```test_0.py```:
     # 0, 1, 2 = cont, bin, int
     var_types = np.array([2, 0])
 
-    miqp = MIQP()
+    miqp = MIQP(hessian_approximation=False) # redundant: default -> exact-hessian
     miqp.set_c(c)
     miqp.set_Q(Q)
     miqp.set_A(A)
@@ -94,12 +88,14 @@ See *tests* folder. E.g. ```test_0.py```:
     miqp.set_xlb(xlb)
     miqp.set_xub(xub)
     miqp.set_var_types(var_types)
-    miqp.set_initial_point(np.array([0, 0]))                       # redundant
-    miqp.solve()
+    miqp.set_initial_point(np.array([0, 0])) # redundant: default init-vec -> zeros
+    miqp.solve(algorithm="B-Hyb")            # redundant: default algorithm -> B-Hyb
 
     print('sol-status: ', miqp.get_sol_status())
     print('sol-obj: ', miqp.get_sol_obj())
-    print('sol-x: ', miqp.get_sol_x())                             # numpy-array
+    print('sol-x: ', miqp.get_sol_x())
+    print('sol-time (ms): ', miqp.get_sol_time())
+
 
 # Install
 **Only the combination of Linux (Ubuntu-like) and python3 was tested!**
@@ -139,8 +135,9 @@ Make sure to respect all those licenses (a lot of software involved).
 - [ ] Support more of Bonmin's options
 - [ ] Support options to control verbosity
 - [ ] Error-handling
+- [ ] Tests
 - [ ] (maybe) consider supporting MIQCQP (quadratic constraints) or MISOCP (second-order cone constraints)
-- [ ] Provide Hessian-calculations to not use Ipopt's Hessian-approximation  
+- [x] ~~Provide Hessian-calculations to not use Ipopt's Hessian-approximation~~  
 - [ ] Write an interface for cvxpy's newly introduced QP-pipeline
 
 # Alternatives

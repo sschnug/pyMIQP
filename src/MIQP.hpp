@@ -19,8 +19,16 @@ class MIQP
     double sol_obj;
     int sol_status = -1;
     long sol_time = -1;
+    bool hessian_approximation;
 
 public:
+    MIQP(bool h_a)
+    {
+        hessian_approximation=h_a;
+        if (h_a)
+          problemqp.set_hessian_approximation(h_a);
+    };
+
     // QP Problem API
     void set_c(RowArray& c);
     void set_Q(SpMat& Q);

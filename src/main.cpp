@@ -10,7 +10,7 @@ PYBIND11_MODULE(pyMIQP, m)
   m.doc() = "MIQP";
 
   py::class_<MIQP>(m, "MIQP")
-  .def(py::init<>())
+  .def(py::init<bool>(), py::arg("hessian_approximation")=false)
   .def("set_c", &MIQP::set_c, "set_c")
   .def("set_Q", &MIQP::set_Q, "set_Q")
   .def("set_A", &MIQP::set_A, "set_A")
@@ -19,7 +19,8 @@ PYBIND11_MODULE(pyMIQP, m)
   .def("set_xlb", &MIQP::set_xlb, "set_xlb")
   .def("set_xub", &MIQP::set_xub, "set_xub")
   .def("set_var_types", &MIQP::set_var_types, "set_var_types")
-  .def("solve", &MIQP::solve, "solve", py::arg("algorithm") = "B-Hyb")
+  .def("solve", &MIQP::solve, "solve",
+    py::arg("algorithm") = "B-Hyb")
   .def("set_initial_point", &MIQP::set_initial_point, "set_initial_point")
   .def("get_sol_x", &MIQP::get_sol_x, "get_sol_x")
   .def("get_sol_obj", &MIQP::get_sol_obj, "get_sol_obj")

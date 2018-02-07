@@ -26,14 +26,14 @@ xlb = np.zeros(N)
 xub = np.full(N, np.inf)
 var_types = np.full(N, 2)
 
-miqp = MIQP()
+miqp = MIQP(hessian_approximation=True)   # modifies default -> exact-hessian
 miqp.set_c(c)
 miqp.set_Q(Q)
 # A, glb, gub not set!
 miqp.set_xlb(xlb)
 miqp.set_xub(xub)
 miqp.set_var_types(var_types)
-miqp.solve(algorithm="B-Hyb")              # redundant: algorithm-default: B-Hyb
+miqp.solve(algorithm="B-Hyb")              # redundant: default algorithm -> B-Hyb
 # miqp.solve(algorithm="BB")
 
 print('sol-status: ', miqp.get_sol_status())

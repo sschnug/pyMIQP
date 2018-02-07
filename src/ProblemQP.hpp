@@ -20,6 +20,7 @@ class ProblemQP
 
     // Flags
     bool use_initial_point = false;
+    bool hessian_approximation = false;
 
     // Helper data: sparsity-structure of A = jacobian
     std::vector<unsigned int> nnz_I;
@@ -29,9 +30,19 @@ class ProblemQP
     std::vector<unsigned int> nnz_flat;
     std::vector<double> nnz_V;
 
+    // Helper data: sparsity-structure of Q = Hessian of the Lagrangian
+    std::vector<unsigned int> H_nnz_I;
+    std::vector<unsigned int> H_nnz_J;
+
+    // Helper data: corresponding values of Q as sparse-vec
+    std::vector<unsigned int> H_nnz_flat;
+    std::vector<double> H_nnz_V;
+
     void calc_jac_g();
+    void calc_h();
 
 public:
+    void set_hessian_approximation(bool);
     void set_c(RowArray& c);
     void set_Q(SpMat& Q);
     void set_A(SpMat& A);
@@ -46,6 +57,10 @@ public:
     std::vector<unsigned int>& get_nnz_J();
     std::vector<unsigned int>& get_nnz_flat();
     std::vector<double>& get_nnz_V();
+    std::vector<unsigned int>& get_H_nnz_I();
+    std::vector<unsigned int>& get_H_nnz_J();
+    std::vector<unsigned int>& get_H_nnz_flat();
+    std::vector<double>& get_H_nnz_V();
     int get_n();
     int get_m();
     RowArray& get_c();

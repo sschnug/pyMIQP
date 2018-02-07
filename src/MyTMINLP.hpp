@@ -17,7 +17,6 @@
 using namespace  Ipopt;
 using namespace Bonmin;
 
-
 class MyTMINLP : public TMINLP
 {
 public:
@@ -176,6 +175,7 @@ private:
    bool printSol_;
 
    // pyMIQP
+   bool hessian_approximation = false;
    ProblemQP problem_qp;
    Eigen::VectorXd sol_x;
    double sol_obj;

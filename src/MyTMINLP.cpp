@@ -73,7 +73,14 @@ bool MyTMINLP::get_nlp_info(Index& n, Index&m, Index& nnz_jac_g,
   m = static_cast<Ipopt::Index>(this->problem_qp.get_m());
 
   nnz_jac_g = this->problem_qp.get_nnz_I().size();
-  nnz_h_lag = 0;
+  if (this->hessian_approximation)
+  {
+    nnz_h_lag = 0;
+  }
+  else
+  {
+    nnz_h_lag = this->problem_qp.get_H_nnz_I().size();
+  }
 
   index_style = TNLP::C_STYLE;
 
@@ -139,8 +146,6 @@ bool MyTMINLP::get_starting_point(Index n, bool init_x, Number* x,
 
 bool MyTMINLP::eval_f(Index n, const Number* x, bool new_x, Number& obj_value)
 {
-  // TODO use selfAdjointView to exploit symmetric Q!
-  // https://eigen.tuxfamily.org/dox/group__TutorialSparse.html
   Eigen::VectorXd eigen_x = Eigen::Map<const Eigen::VectorXd>(x, n, 1);  // IPOPT to Eigen
   double linear_component = this->problem_qp.get_c().dot(eigen_x);
   auto quad_0 = eigen_x.transpose() * this->problem_qp.get_Q();
@@ -203,13 +208,46 @@ bool MyTMINLP::eval_jac_g(Index n, const Number* x, bool new_x,
   return true;
 }
 
+
 bool MyTMINLP::eval_h(Index n, const Number* x, bool new_x,
                  Number obj_factor, Index m, const Number* lambda,
                  bool new_lambda, Index nele_hess, Index* iRow,
                  Index* jCol, Number* values)
 {
-  // TODO support this instead of hardcoded usage of Hessian-approximation
-  return false;
+  if (!this->hessian_approximation)
+  {
+    auto H_nnz_I = this->problem_qp.get_H_nnz_I();
+    auto H_nnz_J = this->problem_qp.get_H_nnz_J();
+
+    if((iRow != NULL) && (jCol != NULL))
+    {
+      for(int i=0; i<H_nnz_I.size(); ++i)
+      {
+        iRow[i] = static_cast<int>(H_nnz_I[i]);
+      }
+
+      for(int i=0; i<H_nnz_J.size(); ++i)
+      {
+        jCol[i] = static_cast<int>(H_nnz_J[i]);
+      }
+    }
+    else
+    {
+      unsigned int bla = H_nnz_I.size();
+      auto H_nnz_flat = this->problem_qp.get_H_nnz_flat();
+      auto H_nnz_V = this->problem_qp.get_H_nnz_V();
+
+      for(unsigned int i=0; i<bla; ++i)
+      {
+        values[H_nnz_flat[i]] = obj_factor * H_nnz_V[i];
+      }
+    }
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 void MyTMINLP::finalize_solution(TMINLP::SolverReturn status,

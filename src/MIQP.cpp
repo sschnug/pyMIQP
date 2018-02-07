@@ -78,7 +78,10 @@ void MIQP::solve(std::string algorithm)
 
     BonminSetup bonmin;
     bonmin.initializeOptionsAndJournalist();
-    bonmin.options()->SetStringValue("hessian_approximation", "limited-memory");
+
+    if (this->hessian_approximation)
+      bonmin.options()->SetStringValue("hessian_approximation", "limited-memory");
+
     bonmin.options()->SetStringValue("algorithm", algorithm);
     bonmin.initialize(GetRawPtr(tminlp));
 
