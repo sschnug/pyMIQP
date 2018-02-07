@@ -1,6 +1,8 @@
 #include "MIQP.hpp"
 #include "MyTMINLP.hpp"
 
+#include <cmath>
+
 #include "CoinPragma.hpp"
 #include "CoinTime.hpp"
 #include "CoinError.hpp"
@@ -81,6 +83,17 @@ void MIQP::solve(std::string algorithm)
 
     if (this->hessian_approximation)
       bonmin.options()->SetStringValue("hessian_approximation", "limited-memory");
+
+    if (!this->verbose)
+    {
+      bonmin.options()->SetIntegerValue("bb_log_level", 0);
+      bonmin.options()->SetIntegerValue("fp_log_level", 0);
+      bonmin.options()->SetIntegerValue("lp_log_level", 0);
+      bonmin.options()->SetIntegerValue("milp_log_level", 0);
+      bonmin.options()->SetIntegerValue("nlp_log_level", 0);
+      bonmin.options()->SetIntegerValue("oa_log_level", 0);
+      bonmin.options()->SetStringValue("sb", "yes");         // Ipopt banner
+    }
 
     bonmin.options()->SetStringValue("algorithm", algorithm);
     bonmin.initialize(GetRawPtr(tminlp));

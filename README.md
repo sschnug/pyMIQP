@@ -133,7 +133,7 @@ Make sure to respect all those licenses (a lot of software involved).
 - [ ] C++ style-formatting: very ugly mixed-style code for now
 - [ ] C++ code quality improvements: partially non-nice C++ Code
 - [ ] Support more of Bonmin's options
-- [ ] Support options to control verbosity
+- [x] ~~Support options to control verbosity~~ (global verbose-switch only for now)
 - [ ] Error-handling
 - [ ] Tests
 - [ ] (maybe) consider supporting MIQCQP (quadratic constraints) or MISOCP (second-order cone constraints)

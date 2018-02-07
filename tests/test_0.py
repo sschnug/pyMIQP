@@ -21,7 +21,7 @@ xub = np.array([np.inf, np.inf])
 # 0, 1, 2 = cont, bin, int
 var_types = np.array([2, 0])
 
-miqp = MIQP(hessian_approximation=False) # redundant: default -> exact-hessian
+miqp = MIQP(verbose=True, hessian_approximation=False) # redundant: both default
 miqp.set_c(c)
 miqp.set_Q(Q)
 miqp.set_A(A)

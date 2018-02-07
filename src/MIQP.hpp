@@ -19,12 +19,14 @@ class MIQP
     double sol_obj;
     int sol_status = -1;
     long sol_time = -1;
+    bool verbose;
     bool hessian_approximation;
 
 public:
-    MIQP(bool h_a)
+    MIQP(bool verb, bool h_a)
     {
-        hessian_approximation=h_a;
+        verbose = verb;
+        hessian_approximation = h_a;
         if (h_a)
           problemqp.set_hessian_approximation(h_a);
     };

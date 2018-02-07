@@ -26,7 +26,7 @@ xlb = np.zeros(N)
 xub = np.full(N, np.inf)
 var_types = np.full(N, 2)
 
-miqp = MIQP(hessian_approximation=True)   # modifies default -> exact-hessian
+miqp = MIQP(verbose=True, hessian_approximation=True)
 miqp.set_c(c)
 miqp.set_Q(Q)
 # A, glb, gub not set!
