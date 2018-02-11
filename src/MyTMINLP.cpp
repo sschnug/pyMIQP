@@ -95,6 +95,7 @@ bool MyTMINLP::get_bounds_info(Index n, Number* x_l, Number* x_u,
   gub = this->problem_qp.get_gub();
   xlb = this->problem_qp.get_xlb();
   xub = this->problem_qp.get_xub();
+  auto var_types = this->problem_qp.get_variables_types();
 
   for(int i=0; i<m; i++)
   {
@@ -111,15 +112,25 @@ bool MyTMINLP::get_bounds_info(Index n, Number* x_l, Number* x_u,
 
   for(int i=0; i<n; i++)
   {
-    if(std::isfinite(xlb[i]))
-      x_l[i] = xlb[i];
+    if(var_types[i] == 1)
+    {
+        // explicit [0,1] bounds needed!
+        // https://list.coin-or.org/pipermail/bonmin/2018-February/000462.html
+        x_l[i] = 0.0;
+        x_u[i] = 1.0;
+    }
     else
-      x_l[i] = -DBL_MAX;
+    {
+      if(std::isfinite(xlb[i]))
+        x_l[i] = xlb[i];
+      else
+        x_l[i] = -DBL_MAX;
 
-    if(std::isfinite(xub[i]))
-      x_u[i] = xub[i];
-    else
-      x_u[i] = DBL_MAX;
+      if(std::isfinite(xub[i]))
+        x_u[i] = xub[i];
+      else
+        x_u[i] = DBL_MAX;
+    }
   }
 
   return true;
