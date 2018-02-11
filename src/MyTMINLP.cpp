@@ -10,7 +10,7 @@
 // MODIFIED for pyMIQP
 #include <cmath>
 #include "MyTMINLP.hpp"
-#include "BonAmplInterface.hpp"
+
 
 void MyTMINLP::add_problem(ProblemQP& problem_qp)
 {
