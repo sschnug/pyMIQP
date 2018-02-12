@@ -10,9 +10,10 @@ PYBIND11_MODULE(pyMIQP, m)
   m.doc() = "MIQP";
 
   py::class_<MIQP>(m, "MIQP")
-  .def(py::init<bool, bool>(),
+  .def(py::init<bool, bool, std::string>(),
     py::arg("verbose")=true,
-    py::arg("hessian_approximation")=false)
+    py::arg("hessian_approximation")=false,
+    py::arg("derivative_test")="none")
   .def("set_c", &MIQP::set_c, "set_c")
   .def("set_Q", &MIQP::set_Q, "set_Q")
   .def("set_A", &MIQP::set_A, "set_A")

@@ -95,6 +95,8 @@ void MIQP::solve(std::string algorithm)
       bonmin.options()->SetStringValue("sb", "yes");         // Ipopt banner
     }
 
+    bonmin.options()->SetStringValue("derivative_test", this->derivative_test);
+
     bonmin.options()->SetStringValue("algorithm", algorithm);
     bonmin.initialize(GetRawPtr(tminlp));
 

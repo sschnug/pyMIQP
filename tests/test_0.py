@@ -8,12 +8,12 @@ Example from OPTI:
     Example 1: Small MIQP
 """
 
-Q = sp.csc_matrix(np.array([[1,-1],[-1,2]]))
+Q = sp.csc_matrix(np.array([[1, -1],[-1, 2]]))
 c = np.array([-2, -6])
 
-A = sp.csc_matrix(np.array([[1,1],[-1,2], [2,1]]))
+A = sp.csc_matrix(np.array([[1, 1],[-1, 2], [2, 1]]))
 glb = np.array([-np.inf, -np.inf, -np.inf])
-gub = np.array([2,2,3])
+gub = np.array([2, 2, 3])
 
 xlb = np.array([0,0])
 xub = np.array([np.inf, np.inf])

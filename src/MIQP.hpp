@@ -21,14 +21,16 @@ class MIQP
     long sol_time = -1;
     bool verbose;
     bool hessian_approximation;
+    std::string derivative_test;
 
 public:
-    MIQP(bool verb, bool h_a)
+    MIQP(bool verb, bool h_a, std::string dc)
     {
         verbose = verb;
         hessian_approximation = h_a;
         if (h_a)
           problemqp.set_hessian_approximation(h_a);
+        derivative_test = dc;
     };
 
     // QP Problem API
