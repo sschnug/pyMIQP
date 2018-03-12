@@ -138,7 +138,8 @@ Make sure to respect all those licenses (a lot of software involved).
 - [ ] Tests
 - [ ] (maybe) consider supporting MIQCQP (quadratic constraints) or MISOCP (second-order cone constraints)
 - [x] ~~Provide Hessian-calculations to not use Ipopt's Hessian-approximation~~  
-- [ ] Write an interface for cvxpy's newly introduced QP-pipeline
+- [x] ~~Write an interface for cvxpy's newly introduced QP-pipeline~~
+  - [Done](https://github.com/cvxgrp/cvxpy/pull/438)
 
 # Alternatives
 The only alternatives known to the author:
